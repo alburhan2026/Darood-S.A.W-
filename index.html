@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>درود شریف عالمی کاؤنٹر - Global Durood Sharif Counter</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Amiri & Noto Nastaliq Urdu) -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Amiri', serif;
+            background: linear-gradient(135deg, #022c22 0%, #064e3b 50%, #022c22 100%);
+            min-height: 100vh;
+            color: #f3f4f6;
+        }
+        .urdu-font {
+            font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+            line-height: 2.2;
+        }
+        .gold-card {
+            background: rgba(6, 78, 59, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 20px rgba(245, 158, 11, 0.15);
+        }
+        .gold-gradient-text {
+            background: linear-gradient(45deg, #fef08a, #f59e0b, #fbbf24, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, #d97706 0%, #f59e0b 50%, #b45309 100%);
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            transition: all 0.25s ease;
+        }
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+            filter: brightness(1.1);
+        }
+        .btn-emerald {
+            background: linear-gradient(135deg, #047857 0%, #10b981 50%, #065f46 100%);
+            transition: all 0.25s ease;
+        }
+        .btn-emerald:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #022c22;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d97706;
+            border-radius: 4px;
+        }
+        .pulse-glow {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.5); }
+        }
+        .clicker-btn:active {
+            transform: scale(0.92);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen selection:bg-amber-500 selection:text-white">
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+        <div class="gold-card rounded-2xl p-6 sm:p-8 w-full max-w-md text-center relative border border-amber-500/50 shadow-2xl">
+            <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-amber-500/10 border-2 border-amber-400 flex items-center justify-center text-amber-400 text-3xl shadow-lg">
+                <i class="fa-solid fa-kaaba"></i>
+            </div>
+            <h2 class="urdu-font text-2xl font-bold text-amber-300 mb-2">درود شریف عالمی کاؤنٹر</h2>
+            <p class="text-xs text-emerald-200 mb-6">شامل ہونے کے لیے اپنا نام اور موبائل نمبر درج کریں۔ آپ کا سیشن محفوظ رہے گا۔</p>
+            
+            <div class="space-y-4 text-right">
+                <div>
+                    <label class="block text-amber-200 text-sm font-semibold mb-1">پورا نام (Full Name):</label>
+                    <div class="relative">
+                        <input type="text" id="userNameInput" placeholder="مثلاً: محمد علی" 
+                            class="w-full bg-emerald-950/80 border border-amber-500/40 rounded-xl px-4 py-3 pl-10 text-white placeholder-emerald-600 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
+                        <i class="fa-solid fa-user absolute left-3 top-3.5 text-amber-400/60"></i>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-amber-200 text-sm font-semibold mb-1">موبائل نمبر (Mobile Number):</label>
+                    <div class="relative">
+                        <input type="tel" id="userPhoneInput" placeholder="03001234567" dir="ltr"
+                            class="w-full bg-emerald-950/80 border border-amber-500/40 rounded-xl px-4 py-3 pl-10 text-white text-right placeholder-emerald-600 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
+                        <i class="fa-solid fa-phone absolute left-3 top-3.5 text-amber-400/60"></i>
+                    </div>
+                </div>
+
+                <p id="loginError" class="text-red-400 text-xs text-center hidden"></p>
+
+                <button type="button" onclick="handleLogin()" class="w-full btn-gold py-3 px-6 rounded-xl font-bold text-lg mt-4 shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    کاؤنٹر میں داخل ہوں
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="mainApp" class="hidden flex-col flex-1">
+        <!-- Header -->
+        <header class="border-b border-amber-500/30 bg-emerald-950/90 backdrop-blur-md sticky top-0 z-40 shadow-lg">
+            <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-400 flex items-center justify-center text-amber-300">
+                        <i class="fa-solid fa-kaaba text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="urdu-font text-lg sm:text-xl font-bold text-amber-300 leading-tight">درود شریف عالمی کاؤنٹر</h1>
+                        <p class="text-xs text-emerald-300 hidden sm:block">صَلَّى اللّٰهُ عَلَيْهِ وَآلِهٖ وَسَلَّمَ</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="openAdminModal()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-shield text-amber-400"></i>
+                        <span class="hidden sm:inline">ایڈمن پینل</span>
+                    </button>
+                    <button onclick="handleLogout()" class="bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/30 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <span>خروج</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Body -->
+        <main class="max-w-5xl mx-auto px-4 py-6 w-full flex-1 space-y-6">
+
+            <!-- Welcome User Banner -->
+            <div class="bg-gradient-to-r from-emerald-900/60 via-emerald-800/40 to-emerald-900/60 rounded-2xl p-4 border border-emerald-500/30 flex flex-wrap items-center justify-between gap-2 shadow-md">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-emerald-700/50 border border-emerald-400 flex items-center justify-center text-amber-300">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs text-emerald-300">خوش آمدید، محترم/محترمہ</span>
+                        <h3 id="displayUserName" class="text-lg font-bold text-amber-300">--</h3>
+                    </div>
+                </div>
+                <div class="text-xs bg-emerald-950/80 px-3 py-1.5 rounded-lg border border-emerald-700/50 text-emerald-200" id="displayUserPhone" dir="ltr">
+                    --
+                </div>
+            </div>
+
+            <!-- Global Target & Global Progress Card -->
+            <div class="gold-card rounded-2xl p-6 relative overflow-hidden pulse-glow">
+                <div class="absolute -top-10 -left-10 w-40 h-40 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 border-b border-amber-500/20 pb-4">
+                    <div>
+                        <span class="text-xs uppercase tracking-wider text-amber-200 font-bold bg-amber-500/20 px-2.5 py-1 rounded-md border border-amber-500/30">
+                            <i class="fa-solid fa-bullseye text-amber-400 ml-1"></i> کل عالمی ہدف (Global Target Goal)
+                        </span>
+                        <h2 id="globalTargetDisplay" class="text-3xl sm:text-4xl font-extrabold gold-gradient-text mt-2">
+                            100,000,000
+                        </h2>
+                    </div>
+                    <div class="text-right sm:text-left">
+                        <span class="text-xs text-emerald-200">کل تمام صارفین کا مجموعہ (All Users Combined):</span>
+                        <div id="globalTotalDisplay" class="text-2xl sm:text-3xl font-bold text-white mt-1">
+                            0
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div>
+                    <div class="flex justify-between text-xs font-semibold text-amber-200 mb-1">
+                        <span>عالمی پیشرفت (Progress towards target)</span>
+                        <span id="targetPercentage">0%</span>
+                    </div>
+                    <div class="w-full bg-emerald-950/80 rounded-full h-4 overflow-hidden border border-amber-500/30 p-0.5">
+                        <div id="progressBar" class="bg-gradient-to-r from-amber-600 via-amber-400 to-yellow-300 h-full rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Counters Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="gold-card rounded-2xl p-5 flex items-center justify-between border-r-4 border-r-amber-400">
+                    <div>
+                        <p class="text-xs font-semibold text-amber-200">تمام عاشقانِ رسول کا مجموعی درود (Global Total)</p>
+                        <h3 id="cardGlobalTotal" class="text-3xl font-bold text-white mt-1">0</h3>
+                        <p class="text-xs text-emerald-300 mt-1"><i class="fa-solid fa-users text-amber-400 ml-1"></i> تمام صارفین کے پڑھا ہوا کل حساب</p>
+                    </div>
+                    <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-300 text-2xl shadow-inner">
+                        <i class="fa-solid fa-earth-asia"></i>
+                    </div>
+                </div>
+
+                <div class="gold-card rounded-2xl p-5 flex items-center justify-between border-r-4 border-r-emerald-400 bg-emerald-900/60">
+                    <div>
+                        <p class="text-xs font-semibold text-emerald-200">صرف آپ کا ذاتی حصّہ (My Contribution)</p>
+                        <h3 id="cardPersonalTotal" class="text-3xl font-bold text-amber-300 mt-1">0</h3>
+                        <p class="text-xs text-emerald-300 mt-1"><i class="fa-solid fa-user-check text-emerald-400 ml-1"></i> آپ کا اپنا پڑھا ہوا مجموعہ</p>
+                    </div>
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center text-emerald-300 text-2xl shadow-inner">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Digital Tasbeeh Clicker Button -->
+            <div class="gold-card rounded-2xl p-6 text-center space-y-4">
+                <h3 class="text-lg font-bold text-amber-300 border-b border-amber-500/20 pb-2">
+                    <i class="fa-solid fa-fingerprint text-amber-400 ml-1"></i> ڈیجیٹل تسبیح کاؤنٹر (1 کلک کاؤنٹر)
+                </h3>
+                <p class="text-xs text-emerald-200">ہر ایک درود شریف پڑھ کر اس بٹن کو دبائیں۔ یہ فوراً عالمی مجموعے اور آپ کے ذاتی کھاتے میں شامل ہو جائے گا۔</p>
+                
+                <div class="py-2 flex justify-center gap-4 items-center">
+                    <button onclick="addDurood(1)" class="clicker-btn w-36 h-36 rounded-full btn-gold shadow-2xl flex flex-col items-center justify-center border-4 border-amber-300/60 select-none">
+                        <i class="fa-solid fa-plus text-3xl mb-1"></i>
+                        <span class="text-lg font-bold">+1 درود</span>
+                    </button>
+                </div>
+                <div class="flex justify-center gap-2 pt-2">
+                    <button onclick="addDurood(10)" class="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400 text-amber-300 text-xs px-3 py-1.5 rounded-lg font-bold">
+                        +10 اکٹھا
+                    </button>
+                    <button onclick="addDurood(33)" class="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400 text-amber-300 text-xs px-3 py-1.5 rounded-lg font-bold">
+                        +33 (تسبیح)
+                    </button>
+                    <button onclick="addDurood(100)" class="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400 text-amber-300 text-xs px-3 py-1.5 rounded-lg font-bold">
+                        +100 (سو)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Add Amounts & Custom Amount Input -->
+            <div class="gold-card rounded-2xl p-6 space-y-6">
+                <div>
+                    <h3 class="text-lg font-bold text-amber-300 border-b border-amber-500/20 pb-2 mb-4">
+                        <i class="fa-solid fa-bolt text-amber-400 ml-1"></i> زیادہ تعداد کا درود اکٹھا شامل کریں (Quick Add)
+                    </h3>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                        <button onclick="addDurood(500)" class="btn-emerald p-3 rounded-xl font-bold text-white text-center shadow">+500</button>
+                        <button onclick="addDurood(1000)" class="btn-emerald p-3 rounded-xl font-bold text-white text-center shadow">+1,000</button>
+                        <button onclick="addDurood(5000)" class="btn-emerald p-3 rounded-xl font-bold text-white text-center shadow">+5,000</button>
+                        <button onclick="addDurood(10000)" class="btn-emerald p-3 rounded-xl font-bold text-white text-center shadow">+10,000</button>
+                        <button onclick="addDurood(50000)" class="btn-emerald p-3 rounded-xl font-bold text-white text-center shadow">+50,000</button>
+                        <button onclick="addDurood(100000)" class="btn-gold p-3 rounded-xl font-bold text-white text-center shadow col-span-2 sm:col-span-1">+100,000</button>
+                    </div>
+                </div>
+
+                <!-- Custom Amount Input -->
+                <div class="pt-4 border-t border-amber-500/20">
+                    <label class="block text-amber-200 text-sm font-semibold mb-2">اپنی مرضی کی کوئی بھی تعداد شامل کریں (Custom Amount):</label>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="number" id="customInput" min="1" placeholder="مثلاً: 2500، 200000 یا جتنی بھی تعداد ہو..." 
+                            class="flex-1 bg-emerald-950/80 border border-amber-500/40 rounded-xl px-4 py-3 text-white placeholder-emerald-600 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
+                        <button onclick="addCustomDurood()" class="btn-gold py-3 px-8 rounded-xl font-bold text-base flex items-center justify-center gap-2 whitespace-nowrap">
+                            <i class="fa-solid fa-plus-circle"></i>
+                            تعداد شامل کریں
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arabic Durood Sharif Display -->
+            <div class="bg-emerald-950/60 border border-amber-500/30 rounded-2xl p-6 text-center shadow-lg">
+                <p class="text-amber-300 text-xl sm:text-2xl font-serif leading-relaxed mb-2">
+                    اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ
+                </p>
+                <p class="text-xs text-emerald-300">ان الله وملائكته يصلون على النبي يا أيها الذين آمنوا صلوا عليه وسلموا تسليما</p>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-amber-500/30 bg-emerald-950/90 py-4 text-center text-xs text-emerald-300/80 mt-auto">
+            <p>درود شریف عالمی کاؤنٹر &copy; 2026 - تمام حقوق محفوظ ہیں۔</p>
+        </footer>
+    </div>
+
+    <!-- ADMIN PANEL MODAL -->
+    <div id="adminModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden">
+        <div class="gold-card rounded-2xl p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative border border-amber-500/50 shadow-2xl">
+            <button onclick="closeAdminModal()" class="absolute top-4 left-4 text-amber-300/70 hover:text-amber-300 text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Admin Password Authentication Screen -->
+            <div id="adminAuthView">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-amber-500/20 border border-amber-400 flex items-center justify-center text-amber-300 text-2xl">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <h3 class="urdu-font text-2xl font-bold text-amber-300">ایڈمن لاگ ان</h3>
+                    <p class="text-xs text-emerald-200">ایڈمن پینل کے لیے پاسورڈ درج کریں</p>
+                </div>
+
+                <div class="space-y-4 max-w-md mx-auto">
+                    <div>
+                        <label class="block text-amber-200 text-sm font-semibold mb-1">پاسورڈ درج کریں:</label>
+                        <input type="password" id="adminPasswordInput" placeholder="*****"
+                            class="w-full bg-emerald-950/80 border border-amber-500/40 rounded-xl px-4 py-3 text-white placeholder-emerald-600 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 text-center tracking-widest">
+                    </div>
+
+                    <p id="adminAuthError" class="text-red-400 text-xs font-bold text-center hidden"></p>
+
+                    <button type="button" onclick="verifyAdminPassword()" class="w-full btn-gold py-3 px-6 rounded-xl font-bold text-base shadow-lg">
+                        تصدیق کریں
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Control Dashboard -->
+            <div id="adminDashboardView" class="hidden space-y-6">
+                <div class="border-b border-amber-500/30 pb-4 flex justify-between items-center">
+                    <div>
+                        <h3 class="urdu-font text-2xl font-bold text-amber-300">ایڈمن کنٹرول پینل</h3>
+                        <p class="text-xs text-emerald-300">عالمی کاؤنٹر اور رجسٹرڈ صارفین کا ایڈمن کنٹرول</p>
+                    </div>
+                    <span class="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs px-3 py-1 rounded-full font-bold">
+                        <i class="fa-solid fa-shield-halved ml-1"></i> ایڈمن ایکسیس
+                    </span>
+                </div>
+
+                <!-- 1. Change Global Target -->
+                <div class="bg-emerald-950/80 p-4 rounded-xl border border-amber-500/30 space-y-3">
+                    <h4 class="text-sm font-bold text-amber-300">
+                        <i class="fa-solid fa-pen-to-square text-amber-400 ml-1"></i> عالمی ہدف کو تبدیل کریں (Change Global Target):
+                    </h4>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="number" id="newTargetInput" placeholder="نیا عالمی ہدف (مثلاً: 50000000)" 
+                            class="flex-1 bg-emerald-900/90 border border-amber-500/40 rounded-lg px-3 py-2 text-white placeholder-emerald-600 text-sm focus:outline-none focus:border-amber-400">
+                        <button onclick="updateGlobalTarget()" class="btn-gold py-2 px-5 rounded-lg font-bold text-sm">
+                            ہدف اپ ڈیٹ کریں
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. Registered Users & Contribution List -->
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-sm font-bold text-amber-300">
+                            <i class="fa-solid fa-users text-amber-400 ml-1"></i> تمام رجسٹرڈ صارفین (<span id="userCountBadge">0</span>)
+                        </h4>
+                        <button onclick="exportUserLogs()" class="text-xs text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 px-2.5 py-1 rounded border border-amber-500/30">
+                            <i class="fa-solid fa-download ml-1"></i> فہرست ڈاؤن لوڈ کریں
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto border border-amber-500/30 rounded-xl max-h-60 overflow-y-auto bg-emerald-950/60">
+                        <table class="w-full text-right text-xs text-emerald-100">
+                            <thead class="bg-emerald-900/90 text-amber-300 sticky top-0 border-b border-amber-500/30">
+                                <tr>
+                                    <th class="p-3">#</th>
+                                    <th class="p-3">صارف کا نام</th>
+                                    <th class="p-3">موبائل نمبر</th>
+                                    <th class="p-3">مجموعی درود</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody" class="divide-y divide-emerald-800/40"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3. Global Counter Control Buttons -->
+                <div class="pt-4 border-t border-amber-500/30 flex justify-between items-center">
+                    <button onclick="resetGlobalCounter()" class="text-xs bg-red-600/20 hover:bg-red-600/40 text-red-300 border border-red-500/40 px-4 py-2 rounded-lg font-bold transition">
+                        <i class="fa-solid fa-trash-can ml-1"></i> تمام کاؤنٹرز ری سیٹ کریں
+                    </button>
+                    <button onclick="closeAdminModal()" class="btn-emerald text-xs px-5 py-2 rounded-lg font-bold text-white">
+                        بند کریں
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast Popup -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-amber-500 text-emerald-950 px-6 py-3 rounded-xl shadow-2xl font-bold border-2 border-yellow-300 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none flex items-center gap-2">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toastMsg">کامیابی!</span>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const ADMIN_PASSWORD_EXACT = "ALBURHAN2026";
+
+        const SEED_USERS = [
+            { name: "محمد احسان", phone: "03001111222", count: 125000 },
+            { name: "فاطمہ الزہراء", phone: "03213334445", count: 85000 },
+            { name: "عبداللہ خلیل", phone: "03456667778", count: 45000 },
+            { name: "علی رضا", phone: "03129990001", count: 20000 }
+        ];
+
+        let state = {
+            currentUser: null,
+            globalTarget: 100000000,
+            globalTotal: 0,
+            users: []
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadStoredData();
+            checkSession();
+        });
+
+        function loadStoredData() {
+            const storedTarget = localStorage.getItem('durood_global_target');
+            if (storedTarget) {
+                state.globalTarget = parseInt(storedTarget, 10);
+            } else {
+                localStorage.setItem('durood_global_target', state.globalTarget);
+            }
+
+            const storedUsers = localStorage.getItem('durood_users');
+            if (storedUsers) {
+                try {
+                    state.users = JSON.parse(storedUsers);
+                } catch(e) {
+                    state.users = [...SEED_USERS];
+                }
+            } else {
+                state.users = [...SEED_USERS];
+                localStorage.setItem('durood_users', JSON.stringify(state.users));
+            }
+
+            recalculateGlobalTotal();
+        }
+
+        function recalculateGlobalTotal() {
+            state.globalTotal = state.users.reduce((acc, u) => acc + (u.count || 0), 0);
+            updateUI();
+        }
+
+        function saveUsersToStorage() {
+            localStorage.setItem('durood_users', JSON.stringify(state.users));
+            recalculateGlobalTotal();
+        }
+
+        function checkSession() {
+            const storedUser = localStorage.getItem('durood_current_user');
+            if (storedUser) {
+                try {
+                    state.currentUser = JSON.parse(storedUser);
+                    let uInList = state.users.find(u => u.phone === state.currentUser.phone);
+                    if (!uInList) {
+                        uInList = { name: state.currentUser.name, phone: state.currentUser.phone, count: 0 };
+                        state.users.push(uInList);
+                        saveUsersToStorage();
+                    }
+                    showMainApp();
+                } catch(e) {
+                    showLoginScreen();
+                }
+            } else {
+                showLoginScreen();
+            }
+        }
+
+        // --- LOGIN & USER MANAGEMENT FIXED ---
+        function handleLogin() {
+            const nameInput = document.getElementById('userNameInput');
+            const phoneInput = document.getElementById('userPhoneInput');
+            const errorEl = document.getElementById('loginError');
+
+            const name = nameInput.value.trim();
+            const phone = phoneInput.value.trim();
+
+            if (!name || !phone) {
+                errorEl.textContent = 'برائے مہربانی اپنا نام اور موبائل نمبر دونوں درج کریں۔';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            if (phone.length < 8) {
+                errorEl.textContent = 'برائے مہربانی درست موبائل نمبر درج کریں۔';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            errorEl.classList.add('hidden');
+
+            let existingUser = state.users.find(u => u.phone === phone);
+            if (!existingUser) {
+                existingUser = { name: name, phone: phone, count: 0 };
+                state.users.push(existingUser);
+            } else {
+                existingUser.name = name;
+            }
+
+            state.currentUser = { name: existingUser.name, phone: existingUser.phone };
+            localStorage.setItem('durood_current_user', JSON.stringify(state.currentUser));
+            saveUsersToStorage();
+
+            showMainApp();
+            showToast(`خوش آمدید ${name}!`);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('durood_current_user');
+            state.currentUser = null;
+            showLoginScreen();
+            showToast('آپ لاگ آؤٹ ہو چکے ہیں۔');
+        }
+
+        function showLoginScreen() {
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('flex');
+        }
+
+        function showMainApp() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('flex');
+
+            if (state.currentUser) {
+                document.getElementById('displayUserName').textContent = state.currentUser.name;
+                document.getElementById('displayUserPhone').textContent = state.currentUser.phone;
+            }
+
+            updateUI();
+        }
+
+        function addCustomDurood() {
+            const input = document.getElementById('customInput');
+            const val = parseInt(input.value, 10);
+            if (!val || val <= 0) {
+                showToast('برائے مہربانی درست تعداد درج کریں!');
+                return;
+            }
+            addDurood(val);
+            input.value = '';
+        }
+
+        function addDurood(amount) {
+            if (!state.currentUser) return;
+
+            let userObj = state.users.find(u => u.phone === state.currentUser.phone);
+            if (userObj) {
+                userObj.count = (userObj.count || 0) + amount;
+                saveUsersToStorage();
+                showToast(`${amount.toLocaleString('ur-PK')} درود شریف کا اضافہ کر دیا گیا!`);
+            }
+
+            if (navigator.vibrate) {
+                navigator.vibrate(30);
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('globalTargetDisplay').textContent = state.globalTarget.toLocaleString();
+            document.getElementById('globalTotalDisplay').textContent = state.globalTotal.toLocaleString();
+            document.getElementById('cardGlobalTotal').textContent = state.globalTotal.toLocaleString();
+
+            let myCount = 0;
+            if (state.currentUser) {
+                let u = state.users.find(user => user.phone === state.currentUser.phone);
+                if (u) myCount = u.count || 0;
+            }
+            document.getElementById('cardPersonalTotal').textContent = myCount.toLocaleString();
+
+            let percentage = 0;
+            if (state.globalTarget > 0) {
+                percentage = ((state.globalTotal / state.globalTarget) * 100).toFixed(2);
+            }
+            if (percentage > 100) percentage = 100;
+
+            document.getElementById('targetPercentage').textContent = `${percentage}%`;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+        }
+
+        function openAdminModal() {
+            document.getElementById('adminModal').classList.remove('hidden');
+            document.getElementById('adminAuthView').classList.remove('hidden');
+            document.getElementById('adminDashboardView').classList.add('hidden');
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminAuthError').classList.add('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function verifyAdminPassword() {
+            const passInput = document.getElementById('adminPasswordInput').value.trim();
+            const errorEl = document.getElementById('adminAuthError');
+
+            if (passInput === ADMIN_PASSWORD_EXACT) {
+                errorEl.classList.add('hidden');
+                document.getElementById('adminAuthView').classList.add('hidden');
+                document.getElementById('adminDashboardView').classList.remove('hidden');
+                renderAdminUsersTable();
+            } else {
+                errorEl.textContent = 'غلط پاسورڈ! دوبارہ کوشش کریں۔';
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        function updateGlobalTarget() {
+            const input = document.getElementById('newTargetInput');
+            const newTarget = parseInt(input.value, 10);
+            if (!newTarget || newTarget <= 0) {
+                alert('برائے مہربانی درست ہدف درج کریں۔');
+                return;
+            }
+            state.globalTarget = newTarget;
+            localStorage.setItem('durood_global_target', newTarget);
+            updateUI();
+            input.value = '';
+            showToast('عالمی ہدف کامیابی سے تبدیل کر دیا گیا!');
+        }
+
+        function renderAdminUsersTable() {
+            const tbody = document.getElementById('usersTableBody');
+            document.getElementById('userCountBadge').textContent = state.users.length;
+            tbody.innerHTML = '';
+
+            if (state.users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center p-4 text-emerald-400">کوئی صارف موجود نہیں ہے۔</td></tr>`;
+                return;
+            }
+
+            const sortedUsers = [...state.users].sort((a, b) => (b.count || 0) - (a.count || 0));
+
+            sortedUsers.forEach((user, index) => {
+                const tr = document.createElement('tr');
+                tr.className = index % 2 === 0 ? 'bg-emerald-950/40' : 'bg-emerald-900/30';
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-amber-400">${index + 1}</td>
+                    <td class="p-3 font-semibold text-white">${escapeHtml(user.name)}</td>
+                    <td class="p-3 text-emerald-300" dir="ltr">${escapeHtml(user.phone)}</td>
+                    <td class="p-3 font-bold text-amber-300">${(user.count || 0).toLocaleString()}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function resetGlobalCounter() {
+            if (confirm('کیا آپ واقعی تمام کاؤنٹرز اور صارف لاگز ری سیٹ کرنا چاہتے ہیں؟')) {
+                state.users = [];
+                saveUsersToStorage();
+                renderAdminUsersTable();
+                showToast('تمام ڈیٹا ری سیٹ کر دیا گیا ہے۔');
+            }
+        }
+
+        function exportUserLogs() {
+            let csvContent = "data:text/csv;charset=utf-8,Index,Name,Phone,DuroodCount\n";
+            state.users.forEach((u, idx) => {
+                csvContent += `${idx + 1},"${u.name}","${u.phone}",${u.count || 0}\n`;
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "durood_sharif_users_list.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.textContent = msg;
+
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
